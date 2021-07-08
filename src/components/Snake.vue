@@ -80,6 +80,17 @@ export default defineComponent({
 			isAlive.value = true;
 		}
 
+		// 坐标是否在身体上
+		const isOnBody = ({x, y}: Position) => {
+			for(const body of bodies.value) {
+				if(body.x === x && body.y === y) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		// 移动
 		const move = () => {
 			if(!isAlive.value || !direction.value) {
@@ -89,20 +100,11 @@ export default defineComponent({
 			// 计算偏移量
 			let {x, y}  = nextPosition(bodies.value[0], direction.value);
 
-			// 判断是否撞墙
-			if(x < 0 || x > 290 || y < 0 || y > 290) {
+			// 判断是否撞身体或墙
+			if(isOnBody({x, y}) || x < 0 || x > 290 || y < 0 || y > 290) {
 				isAlive.value = false;
 				instance?.emit('dead');
 				return;
-			}
-
-			// 判断是否撞到身体
-			for(const body of bodies.value) {
-				if(body.x === x && body.y === y) {
-					isAlive.value = false;
-					instance?.emit('dead');
-					return;
-				}
 			}
 
 			// 头部向前增加一个单位
@@ -157,6 +159,7 @@ export default defineComponent({
 		return {
 			bodies,
 			reset,
+			isOnBody,
 		}
 	},
 })
