@@ -36,6 +36,28 @@ const getDirection = (ev: KeyboardEvent) => {
 	}
 }
 
+// 计算蛇头的下一个位置
+const nextPosition = ({x, y}: Position, direction: Direction|null) => {
+	const nextPosition = {x, y};
+	switch(direction) {
+		case Direction.Up:
+			nextPosition.y -= 10;
+			break;
+		case Direction.Down:
+			nextPosition.y += 10;
+			break;
+		case Direction.Left:
+			nextPosition.x -= 10;
+			break;
+		case Direction.Right:
+			nextPosition.x += 10;
+			break;
+		default: 
+	}
+
+	return nextPosition;
+}
+
 const createDefaultBodies = () => {
 	return [{ x: 0, y: 0 }];
 }
@@ -65,22 +87,7 @@ export default defineComponent({
 			}
 
 			// 计算偏移量
-			let {x, y} = bodies.value[0];
-			switch(direction.value) {
-				case Direction.Up:
-					y -= 10;
-					break;
-				case Direction.Down:
-					y += 10;
-					break;
-				case Direction.Left:
-					x -= 10;
-					break;
-				case Direction.Right:
-					x += 10;
-					break;
-				default: 
-			}
+			let {x, y}  = nextPosition(bodies.value[0], direction.value);
 
 			// 判断是否撞墙
 			if(x < 0 || x > 290 || y < 0 || y > 290) {
@@ -105,9 +112,14 @@ export default defineComponent({
 			if(direction.value === toDirection || toDirection === null) {
 				return;
 			}
+
 			// 身长大于1时，不允许直接掉头
-			if(bodies.value.length > 1 && direction.value! + toDirection === 0) {
-				return;
+			if(bodies.value.length > 1) {
+				const [head, body] = bodies.value;
+				const headNext = nextPosition(head, toDirection)
+				if(headNext.x === body.x && headNext.y === body.y) {
+					return;
+				}
 			}
 
 			direction.value = toDirection;
