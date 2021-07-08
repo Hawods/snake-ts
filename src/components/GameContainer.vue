@@ -46,10 +46,8 @@ export default defineComponent({
 			scorePanel.addScore();
 			const snake: any = this.$refs.snake;
 			const food: any = this.$refs.food;
-			let i = 0;
 			do {
 				food.changePosition();
-				console.log({i: ++i});
 			} while (snake.isOnBody(this.foodPosition));
 		},
 		gameOver() {
