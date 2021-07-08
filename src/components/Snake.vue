@@ -82,7 +82,7 @@ export default defineComponent({
 
 		// 移动
 		const move = () => {
-			if(!isAlive.value) {
+			if(!isAlive.value || !direction.value) {
 				return;
 			}
 
@@ -94,6 +94,15 @@ export default defineComponent({
 				isAlive.value = false;
 				instance?.emit('dead');
 				return;
+			}
+
+			// 判断是否撞到身体
+			for(const body of bodies.value) {
+				if(body.x === x && body.y === y) {
+					isAlive.value = false;
+					instance?.emit('dead');
+					return;
+				}
 			}
 
 			// 头部向前增加一个单位
