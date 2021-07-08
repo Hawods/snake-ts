@@ -8,14 +8,6 @@
 <script lang="ts">
 import { computed, defineComponent, getCurrentInstance, inject, onBeforeUnmount, onMounted, reactive, Ref, ref, watch } from 'vue'
 
-// 上下左右四个方向，取正负值方便判断是否相反方向
-enum Direction {
-    Up = 1,
-    Down = -1,
-    Left = 2,
-    Right = -2,
-}
-
 // 从键盘事件中获取方向
 const getDirection = (ev: KeyboardEvent) => {
 	switch(ev.key) {
